@@ -1,0 +1,65 @@
+
+//   find one person
+
+Person.findOne({ favoriteFoods: "Pizza" }, (err, person) => {
+  if (err) return console.error(err);
+  console.log("Person found:", person);
+});
+
+//   find by id
+
+Person.findById(personId, (err, person) => {
+  if (err) return console.error(err);
+  console.log("Person found by ID:", person);
+});
+
+//   update a person
+
+Person.findById(personId, (err, person) => {
+  if (err) {
+    console.log(err);
+  } else {
+    person.favoriteFoods.push("hamburger");
+    person.save((err, updatedPerson) => {
+      if (err) return console.log(err);
+      console.log("Updated person:", updatedPerson);
+    });
+  }
+});
+
+// update using findOneAndUpdate
+
+Person.findOneAndUpdate(
+  { name: personName },
+  { age: 20 },
+  { new: true },
+  (err, updatedPerson) => {
+    if (err) return console.error(err);
+    console.log("Updated person:", updatedPerson);
+  }
+);
+
+// delete one doc
+
+Person.findByIdAndRemove(personId, (err, deletedPerson) => {
+  if (err) return console.error(err);
+  console.log("Deleted person:", deletedPerson);
+});
+
+//   delete multiple
+
+Person.remove({ name: "Mary" }, (err, result) => {
+  if (err) return console.error(err);
+  console.log("Deleted people:", result);
+});
+
+//   chain search
+
+Person.find({ favoriteFoods: "Burritos" })
+  .sort({ name: 1 }) // sort by name ascending
+  .limit(2) // limit to 2 results
+  .select("-age") // exclude the age field
+  .exec((err, people) => {
+    if (err) return console.error(err);
+    console.log("People found:", people);
+  });
